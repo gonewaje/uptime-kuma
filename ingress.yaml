@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: uptime-kuma-ingress
+  annotations:
+    cert-manager.io/issuer: letsencrypt-staging
+    nginx.ingress.kubernetes.io/service-upstream: 'true'
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - uptime-kuma.gonewaje.com
+      secretName: staging-uptime-kuma-cert
+  rules:
+    - host: uptime-kuma.gonewaje.com
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: uptime-kuma-svc
+                port:
+                  number: 8080
